@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espacios Públicos de Mérida</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header id="main-header">
+        <h1 id="header-title">Espacios Públicos en Mérida</h1>
+        <nav class="tabs">
+            <button class="tab-link" data-tab="modal-tab-info">Información</button>
+            <button class="tab-link" data-tab="modal-tab-web">Sitios Web</button>
+            <button class="tab-link" data-tab="modal-tab-calificar">Calificar Visor</button>
+            <button class="tab-link" data-tab="modal-tab-contacto">Contacto</button> 
+        </nav>
+    </header>
+
+    <div id="map"></div>
+
+    <div id="controls-panel">
+        <button id="btn-ubicacion">Encuéntrate</button> 
+    </div>
+
+    <div id="dashboard">
+        <div id="tab-content">
+            <div id="tab-info" class="tab-pane active">
+                <p id="info-default">Haz clic en un espacio para ver su información.</p>
+                <div id="info-panel" style="display: none;">
+                    <h3 id="dash-titulo"></h3>
+                    <p id="dash-modulos"></p>
+                    <p id="dash-nom"></p>
+                    <p id="dash-area"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-overlay">
+        <div id="modal-container">
+            <button id="modal-close-btn">&times;</button>
+            
+            <div id="modal-tab-info" class="modal-tab-pane">
+                <h2>Información del Geovisualizador</h2>
+                
+                <h3>Objetivo</h3>
+                <p>El objetivo del Geovisualizador es concentrar, procesar y visualizar datos geoespaciales sobre los espacios públicos, permitiendo identificar su distribución, tipología, estado físico, equipamiento y nivel de accesibilidad. Con esta plataforma se busca facilitar la toma de decisiones para autoridades, especialistas y ciudadanía, promoviendo la creación y mejoramiento de espacios públicos seguros, inclusivos, resilientes y socialmente cohesionados.</p>
+                
+                <h3>Misión</h3>
+                <p>La misión del Geovisualizador es proveer una herramienta confiable, estandarizada y accesible que permita evaluar la calidad y disponibilidad del espacio público, contribuyendo a una gestión urbana más eficiente. A través de la integración de indicadores definidos por la NOM-001-SEDATU-2021, el sistema orienta a municipios, estados y organismos públicos en la autoevaluación de su infraestructura urbana, impulsando políticas de mejora continua.</p>
+                
+                <h3>Visión</h3>
+                <p>Nuestra visión es consolidarnos como una plataforma de referencia nacional para el análisis del espacio público, promoviendo ciudades más equitativas, habitables y sostenibles. Aspiramos a que, mediante el uso extendido del Geovisualizador, la planificación urbana en México evolucione hacia modelos basados en información abierta, monitoreo sistemático y participación ciudadana informada.</p>
+                
+                <h3>Relación con la NOM-001-SEDATU-2021</h3>
+                <p>El Geovisualizador está alineado con la NOM-001-SEDATU-2021 en los siguientes aspectos:</p>
+                <ul>
+                    <li><b>Clasificación estandarizada de espacios públicos:</b> La plataforma integra las categorías oficiales de la NOM (áreas verdes, plazas, infraestructuras peatonales, espacios naturales, equipamiento urbano, etc.), asegurando compatibilidad con los instrumentos de planeación urbana.</li>
+                    <li><b>Herramienta de apoyo para la autoevaluación municipal:</b> La NOM promueve que los gobiernos locales realicen autoevaluaciones periódicas. El Geovisualizador opera como una herramienta directa para cumplir este propósito, generando reportes, mapas temáticos y diagnósticos comparables.</li>
+                </ul>
+            </div>
+
+            <div id="modal-tab-web" class="modal-tab-pane">
+                <h2>Sitios Web de Interés</h2>
+                <ul>
+                    <li><a href="https://www.merida.gob.mx/" target="_blank">Ayuntamiento de Mérida</a></li>
+                    <li><a href="https://www.anpr.org.mx/" target="_blank">ANPR (Asociación Nacional de Parques y Recreación)</a></li>
+                    <li><a href="https://www.gob.mx/sedatu" target="_blank">SEDATU</a></li>
+                </ul>
+            </div>
+
+            <div id="modal-tab-calificar" class="modal-tab-pane">
+                <h4>Califica este Geovisualizador</h4>
+                <p>Tu opinión nos ayuda a mejorar.</p>
+                <div class="rating-stars">
+                    <i class="fa-solid fa-star" data-value="1"></i>
+                    <i class="fa-solid fa-star" data-value="2"></i>
+                    <i class="fa-solid fa-star" data-value="3"></i>
+                    <i class="fa-solid fa-star" data-value="4"></i>
+                    <i class="fa-solid fa-star" data-value="5"></i>
+                </div>
+                <textarea id="comment-box" rows="4" placeholder="Escribe tu comentario..."></textarea>
+                <button id="submit-rating-btn">Enviar Opinión</button>
+                <small id="rating-note">Nota: El envío de calificaciones es una demostración.</small>
+            </div>
+
+            <div id="modal-tab-contacto" class="modal-tab-pane">
+                <h2>Contacto</h2>
+                <div class="contact-person">
+                    <h3>Urbanista Frida Céspedes</h3>
+                    <p>Correo: <a href="mailto:cespedes.frida01@gmail.com">cespedes.frida01@gmail.com</a></p>
+                </div>
+                <div class="contact-person">
+                    <h3>Urbanista Ismael Luna</h3>
+                    <p>Correo: <a href="mailto:ia309745@gmail.com">ia309745@gmail.com</a></p>
+                </div>
+                
+                <div class="contact-affiliation">
+                    <p>Universidad Nacional Autónoma de México (UNAM)</p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

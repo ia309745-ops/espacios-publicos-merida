@@ -1,0 +1,314 @@
+/* --- Configuración Global --- */
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    overflow: hidden;
+}
+
+/* --- 1. Encabezado Superior --- */
+#main-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: #238b45; /* Verde Fuerte */
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    overflow: hidden; 
+}
+
+#main-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url('https://www.transparenttextures.com/patterns/leaves.png');
+    background-repeat: repeat;
+    opacity: 0.4; /* Opacidad 40% */
+    z-index: -1; 
+}
+
+#header-title {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+/* --- Estilo de Pestañas (Encabezado) --- */
+.tabs { display: flex; }
+.tab-link {
+    padding: 10px 15px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 0.95em;
+    color: #f0f0f0;
+    border-bottom: 3px solid transparent;
+    margin: 0 5px;
+    font-weight: 500;
+}
+.tab-link:hover { background: rgba(255,255,255,0.1); }
+.tab-link.active {
+    font-weight: 700;
+    color: #ffffff;
+    border-bottom-color: #66c2a4;
+}
+
+/* --- 2. Contenedor del Mapa --- */
+#map {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 60px);
+    z-index: 1;
+}
+
+/* --- 3. Panel de Controles (Simplificado) --- */
+#controls-panel {
+    position: absolute;
+    top: 75px;
+    right: 15px;
+    width: 300px;
+    z-index: 1000;
+}
+
+#btn-ubicacion {
+    width: 100%;
+    padding: 10px;
+    background: #fdfdfd;
+    color: #333;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    font-weight: 500;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+#btn-ubicacion:hover { background: #f4f4f4; }
+
+/* --- 4. Panel de Información (Simplificado) --- */
+#dashboard {
+    position: absolute;
+    bottom: 30px;
+    right: 15px;
+    width: 300px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    z-index: 1000;
+    padding: 15px; /* Padding simple */
+    box-sizing: border-box;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+#info-default {
+    color: #555;
+    font-style: italic;
+    text-align: center;
+}
+
+#info-panel h3 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.4em;
+    font-weight: bold; /* Negritas */
+    text-align: center; /* Centrado */
+}
+#info-panel p {
+    margin: 8px 0; /* Más espaciado */
+    font-size: 0.95em;
+    color: #444;
+    word-wrap: break-word; /* Evita que el texto se salga */
+}
+
+/* --- 5. Estilos del Modal Global --- */
+#modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 2000;
+    display: none; /* Oculto por defecto */
+    justify-content: center;
+    align-items: center;
+}
+#modal-container {
+    background: white;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    padding: 25px;
+    position: relative;
+    overflow-y: auto;
+}
+#modal-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 2em;
+    font-weight: bold;
+    color: #aaa;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+.modal-tab-pane {
+    display: none; /* Ocultas por defecto */
+}
+.modal-tab-pane.active {
+    display: block; /* Muestra solo la activa */
+}
+#modal-container ul {
+    list-style: none;
+    padding-left: 0;
+}
+#modal-container li {
+    background: #f4f4f4;
+    margin-bottom: 8px;
+    border-radius: 4px;
+}
+#modal-container li a {
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+    color: #005a87;
+    font-weight: bold;
+}
+
+/* --- Estilos de Calificación (Ahora en el Modal) --- */
+.rating-stars {
+    font-size: 1.8em;
+    color: #ccc;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+.rating-stars .fa-star {
+    margin-right: 5px;
+}
+.rating-stars .fa-star.selected,
+.rating-stars .fa-star:hover {
+    color: #f7d32a; /* Color dorado */
+}
+#comment-box {
+    width: calc(100% - 20px);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    font-family: inherit;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+#submit-rating-btn {
+    width: 100%;
+    padding: 10px;
+    background: #238b45;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+#submit-rating-btn:hover {
+    background: #1c6d36;
+}
+#rating-note {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.8em;
+    color: #777;
+    font-style: italic;
+}
+
+/* --- Control de Zoom --- */
+.leaflet-top.leaflet-left {
+    top: 75px;
+    z-index: 999;
+}
+
+/* --- Control de Capas --- */
+.leaflet-bottom.leaflet-left {
+    bottom: 30px; 
+    left: 15px; 
+    z-index: 999;
+}
+.leaflet-control-layers {
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* --- Estilo para el Buffer --- */
+.leaflet-buffer-layer {
+    fillColor: '#007bff';
+    fillOpacity: 0.1;
+    stroke: true;
+    color: '#007bff';
+    weight: 2;
+    dashArray: '5, 5';
+}
+
+/* --- Estilo para la Línea de Radio --- */
+.leaflet-radius-line {
+    stroke: true;
+    color: '#333';
+    weight: 2;
+    dashArray: '5, 5';
+    opacity: 0.8;
+}
+
+/* --- Estilo para la Etiqueta de Radio --- */
+.leaflet-radius-tooltip {
+    background: none;
+    border: none;
+    box-shadow: none;
+    color: #000;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* --- ¡NUEVO! Estilos para la pestaña de Contacto --- */
+#modal-tab-contacto h3 {
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    font-size: 1.2em;
+}
+#modal-tab-contacto p {
+    margin-bottom: 5px;
+}
+#modal-tab-contacto p a {
+    color: #005a87;
+    text-decoration: underline;
+}
+.contact-person {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Estilo para el texto de afiliación (UNAM) */
+.contact-affiliation {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    font-style: italic;
+    color: #555;
+}
+.contact-affiliation p {
+    margin: 5px 0;
+}
