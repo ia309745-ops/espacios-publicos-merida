@@ -8,307 +8,126 @@ html, body {
     overflow: hidden;
 }
 
-/* --- 1. Encabezado Superior --- */
+/* --- Encabezado --- */
 #main-header {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 60px;
-    background: #238b45; /* Verde Fuerte */
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    box-sizing: border-box;
-    z-index: 1000;
+    top: 0; left: 0; width: 100%; height: 60px;
+    background: #238b45; color: white;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 20px; box-sizing: border-box; z-index: 1000;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    overflow: hidden; 
 }
-
 #main-header::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
     background-image: url('https://www.transparenttextures.com/patterns/leaves.png');
-    background-repeat: repeat;
-    opacity: 0.4; /* Opacidad 40% */
-    z-index: -1; 
+    background-repeat: repeat; opacity: 0.4; z-index: -1; 
 }
+#header-title { margin: 0; font-size: 1.5em; font-weight: 600; }
 
-#header-title {
-    margin: 0;
-    font-size: 1.5em;
-    font-weight: 600;
-}
-
-/* --- Estilo de Pestañas (Encabezado) --- */
+/* --- Pestañas --- */
 .tabs { display: flex; }
 .tab-link {
-    padding: 10px 15px;
-    cursor: pointer;
-    background: none;
-    border: none;
-    font-size: 0.95em;
-    color: #f0f0f0;
-    border-bottom: 3px solid transparent;
-    margin: 0 5px;
-    font-weight: 500;
+    padding: 10px 15px; cursor: pointer; background: none; border: none;
+    font-size: 0.95em; color: #f0f0f0; border-bottom: 3px solid transparent;
+    margin: 0 5px; font-weight: 500;
 }
 .tab-link:hover { background: rgba(255,255,255,0.1); }
-.tab-link.active {
-    font-weight: 700;
-    color: #ffffff;
-    border-bottom-color: #66c2a4;
-}
+.tab-link.active { font-weight: 700; color: #ffffff; border-bottom-color: #66c2a4; }
 
-/* --- 2. Contenedor del Mapa --- */
-#map {
-    position: absolute;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    height: calc(100% - 60px);
-    z-index: 1;
-}
+/* --- Mapa --- */
+#map { position: absolute; top: 60px; left: 0; width: 100%; height: calc(100% - 60px); z-index: 1; }
 
-/* --- 3. Panel de Controles (Simplificado) --- */
-#controls-panel {
+/* --- NUEVO: Botón Ubicación (Pin) --- */
+#left-controls {
     position: absolute;
-    top: 75px;
-    right: 15px;
-    width: 300px;
+    bottom: 100px; /* Encima del selector de capas */
+    left: 15px;
     z-index: 1000;
 }
-
 #btn-ubicacion {
-    width: 100%;
-    padding: 10px;
-    background: #fdfdfd;
-    color: #333;
-    border: 1px solid #ccc;
-    cursor: pointer;
-    font-weight: 500;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    width: 40px; height: 40px;
+    background: #fff; color: #333;
+    border: 2px solid rgba(0,0,0,0.2); border-radius: 50%;
+    cursor: pointer; font-size: 1.2em;
+    display: flex; justify-content: center; align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: all 0.3s;
 }
-#btn-ubicacion:hover { background: #f4f4f4; }
+#btn-ubicacion:hover { background: #f4f4f4; color: #007bff; transform: scale(1.1); }
 
-/* --- 4. Panel de Información (Simplificado) --- */
-#dashboard {
+/* --- NUEVO: Dashboard Global (Arriba Derecha) --- */
+#global-dashboard {
     position: absolute;
-    bottom: 30px;
-    right: 15px;
+    top: 75px; right: 15px;
     width: 300px;
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     z-index: 1000;
-    padding: 15px; /* Padding simple */
+    padding: 15px;
     box-sizing: border-box;
-    max-height: calc(100vh - 200px);
+    font-size: 0.9em;
+}
+#global-dashboard h3 { margin-top: 0; color: #238b45; border-bottom: 1px solid #eee; padding-bottom: 5px;}
+.stat-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+.stat-row.highlight { background: #e8f5e9; padding: 5px; border-radius: 4px; color: #1b5e20; }
+#btn-toggle-radii {
+    width: 100%; padding: 8px; margin-top: 10px;
+    background: #007bff; color: white; border: none; border-radius: 4px;
+    cursor: pointer; font-weight: bold;
+}
+#btn-toggle-radii:hover { background: #0056b3; }
+
+/* --- Dashboard Individual (Abajo Derecha) --- */
+#dashboard {
+    position: absolute; bottom: 30px; right: 15px;
+    width: 300px; background: white; border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2); z-index: 1000;
+    padding: 15px; box-sizing: border-box;
+    max-height: calc(100vh - 350px); /* Ajuste para que no choque con el de arriba */
     overflow-y: auto;
 }
 
-#info-default {
-    color: #555;
-    font-style: italic;
-    text-align: center;
-}
+/* Info Panel */
+#info-panel h3 { color: #333; margin: 0 0 10px 0; font-size: 1.3em; text-align: center; }
+#info-panel p { margin: 5px 0; font-size: 0.95em; color: #444; }
 
-#info-panel h3 {
-    color: #333;
-    margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 1.4em;
-    font-weight: bold; /* Negritas */
-    text-align: center; /* Centrado */
+/* --- NUEVO: Estadísticas de Población (Grid) --- */
+.population-stats {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
 }
-#info-panel p {
-    margin: 8px 0; /* Más espaciado */
-    font-size: 0.95em;
-    color: #444;
-    word-wrap: break-word; /* Evita que el texto se salga */
+.population-stats h4 { margin: 0 0 10px 0; font-size: 0.9em; color: #666; text-align: center; }
+.pob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pob-item {
+    background: #f9f9f9; border-radius: 6px; padding: 8px;
+    text-align: center; display: flex; flex-direction: column; align-items: center;
 }
+.pob-item i { font-size: 1.2em; color: #238b45; margin-bottom: 5px; }
+.pob-item span { font-weight: bold; font-size: 1.1em; color: #333; }
+.pob-item small { font-size: 0.75em; color: #777; }
 
-/* --- 5. Estilos del Modal Global --- */
+/* --- Estilos del Modal (Igual que antes) --- */
 #modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.6);
-    z-index: 2000;
-    display: none; /* Oculto por defecto */
-    justify-content: center;
-    align-items: center;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); z-index: 2000;
+    display: none; justify-content: center; align-items: center;
 }
 #modal-container {
-    background: white;
-    width: 90%;
-    max-width: 600px;
-    max-height: 80vh;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    padding: 25px;
-    position: relative;
-    overflow-y: auto;
+    background: white; width: 90%; max-width: 600px; max-height: 80vh;
+    border-radius: 8px; padding: 25px; position: relative; overflow-y: auto;
 }
-#modal-close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 2em;
-    font-weight: bold;
-    color: #aaa;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-.modal-tab-pane {
-    display: none; /* Ocultas por defecto */
-}
-.modal-tab-pane.active {
-    display: block; /* Muestra solo la activa */
-}
-#modal-container ul {
-    list-style: none;
-    padding-left: 0;
-}
-#modal-container li {
-    background: #f4f4f4;
-    margin-bottom: 8px;
-    border-radius: 4px;
-}
-#modal-container li a {
-    display: block;
-    padding: 12px;
-    text-decoration: none;
-    color: #005a87;
-    font-weight: bold;
-}
+#modal-close-btn { position: absolute; top: 10px; right: 15px; font-size: 2em; cursor: pointer; border:none; background:none;}
+.modal-tab-pane { display: none; }
+.modal-tab-pane.active { display: block; }
+.rating-stars { color: #ccc; cursor: pointer; font-size: 1.5em; }
+.rating-stars .fa-star.selected { color: #f7d32a; }
+.contact-person { border-bottom: 1px solid #eee; margin-bottom: 10px; }
+.contact-affiliation { text-align: center; font-style: italic; color: #555; margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px;}
 
-/* --- Estilos de Calificación (Ahora en el Modal) --- */
-.rating-stars {
-    font-size: 1.8em;
-    color: #ccc;
-    cursor: pointer;
-    margin-bottom: 15px;
-}
-.rating-stars .fa-star {
-    margin-right: 5px;
-}
-.rating-stars .fa-star.selected,
-.rating-stars .fa-star:hover {
-    color: #f7d32a; /* Color dorado */
-}
-#comment-box {
-    width: calc(100% - 20px);
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 10px;
-    font-family: inherit;
-    font-size: 0.9em;
-    margin-bottom: 10px;
-}
-#submit-rating-btn {
-    width: 100%;
-    padding: 10px;
-    background: #238b45;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-}
-#submit-rating-btn:hover {
-    background: #1c6d36;
-}
-#rating-note {
-    display: block;
-    margin-top: 10px;
-    font-size: 0.8em;
-    color: #777;
-    font-style: italic;
-}
-
-/* --- Control de Zoom --- */
-.leaflet-top.leaflet-left {
-    top: 75px;
-    z-index: 999;
-}
-
-/* --- Control de Capas --- */
-.leaflet-bottom.leaflet-left {
-    bottom: 30px; 
-    left: 15px; 
-    z-index: 999;
-}
-.leaflet-control-layers {
-    border-radius: 8px !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-
-/* --- Estilo para el Buffer --- */
-.leaflet-buffer-layer {
-    fillColor: '#007bff';
-    fillOpacity: 0.1;
-    stroke: true;
-    color: '#007bff';
-    weight: 2;
-    dashArray: '5, 5';
-}
-
-/* --- Estilo para la Línea de Radio --- */
-.leaflet-radius-line {
-    stroke: true;
-    color: '#333';
-    weight: 2;
-    dashArray: '5, 5';
-    opacity: 0.8;
-}
-
-/* --- Estilo para la Etiqueta de Radio --- */
-.leaflet-radius-tooltip {
-    background: none;
-    border: none;
-    box-shadow: none;
-    color: #000;
-    font-weight: bold;
-    font-size: 1.1em;
-}
-
-/* --- ¡NUEVO! Estilos para la pestaña de Contacto --- */
-#modal-tab-contacto h3 {
-    color: #333;
-    margin-top: 20px;
-    margin-bottom: 5px;
-    font-size: 1.2em;
-}
-#modal-tab-contacto p {
-    margin-bottom: 5px;
-}
-#modal-tab-contacto p a {
-    color: #005a87;
-    text-decoration: underline;
-}
-.contact-person {
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
-}
-
-/* Estilo para el texto de afiliación (UNAM) */
-.contact-affiliation {
-    text-align: center;
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-    font-style: italic;
-    color: #555;
-}
-.contact-affiliation p {
-    margin: 5px 0;
-}
+/* --- Leaflet Controls --- */
+.leaflet-bottom.leaflet-left { bottom: 30px; left: 15px; z-index: 999; }
+.leaflet-top.leaflet-left { top: 75px; }
+.leaflet-radius-line { stroke: true; color: #333; weight: 2; dashArray: '5, 5'; opacity: 0.8; }
+.leaflet-radius-tooltip { background: none; border: none; box-shadow: none; font-weight: bold; }

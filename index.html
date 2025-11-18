@@ -22,19 +22,71 @@
 
     <div id="map"></div>
 
-    <div id="controls-panel">
-        <button id="btn-ubicacion">Encuéntrate</button> 
+    <div id="left-controls">
+        <button id="btn-ubicacion" title="Encuéntrate">
+            <i class="fa-solid fa-location-dot"></i> </button>
+    </div>
+
+    <div id="global-dashboard">
+        <h3>Diagnóstico Municipal</h3>
+        <div class="stat-row">
+            <span>Espacios Públicos:</span>
+            <strong id="stat-total-ep">Cargando...</strong>
+        </div>
+        <div class="stat-row">
+            <span>Superficie Total:</span>
+            <strong id="stat-total-area">...</strong>
+        </div>
+        <div class="stat-row">
+            <span>Población Total (INEGI):</span>
+            <strong id="stat-pob-total">Cargando...</strong>
+        </div>
+        <div class="stat-row highlight">
+            <span>Población Beneficiada:</span>
+            <strong id="stat-pob-beneficiada">Calculando...</strong>
+        </div>
+        <hr>
+        <button id="btn-toggle-radii">
+            <i class="fa-solid fa-circle-notch"></i> Ver Cobertura (Radios)
+        </button>
     </div>
 
     <div id="dashboard">
         <div id="tab-content">
             <div id="tab-info" class="tab-pane active">
-                <p id="info-default">Haz clic en un espacio para ver su información.</p>
+                <p id="info-default">Selecciona un espacio para ver su impacto social.</p>
+                
                 <div id="info-panel" style="display: none;">
                     <h3 id="dash-titulo"></h3>
                     <p id="dash-modulos"></p>
                     <p id="dash-nom"></p>
                     <p id="dash-area"></p>
+                    
+                    <div class="population-stats">
+                        <h4>Población Beneficiada (Radio de Influencia)</h4>
+                        <div class="pob-grid">
+                            <div class="pob-item">
+                                <i class="fa-solid fa-users"></i>
+                                <span id="dash-pob-total">0</span>
+                                <small>Total</small>
+                            </div>
+                            <div class="pob-item">
+                                <i class="fa-solid fa-child"></i>
+                                <span id="dash-pob-0-14">0</span>
+                                <small>0-14 años</small>
+                            </div>
+                            <div class="pob-item">
+                                <i class="fa-solid fa-person-cane"></i>
+                                <span id="dash-pob-65">0</span>
+                                <small>65+ años</small>
+                            </div>
+                            <div class="pob-item">
+                                <i class="fa-solid fa-wheelchair"></i>
+                                <span id="dash-pob-disc">0</span>
+                                <small>Discap.</small>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,51 +95,30 @@
     <div id="modal-overlay">
         <div id="modal-container">
             <button id="modal-close-btn">&times;</button>
-            
             <div id="modal-tab-info" class="modal-tab-pane">
                 <h2>Información del Geovisualizador</h2>
-                
                 <h3>Objetivo</h3>
-                <p>El objetivo del Geovisualizador es concentrar, procesar y visualizar datos geoespaciales sobre los espacios públicos, permitiendo identificar su distribución, tipología, estado físico, equipamiento y nivel de accesibilidad. Con esta plataforma se busca facilitar la toma de decisiones para autoridades, especialistas y ciudadanía, promoviendo la creación y mejoramiento de espacios públicos seguros, inclusivos, resilientes y socialmente cohesionados.</p>
-                
-                <h3>Misión</h3>
-                <p>La misión del Geovisualizador es proveer una herramienta confiable, estandarizada y accesible que permita evaluar la calidad y disponibilidad del espacio público, contribuyendo a una gestión urbana más eficiente. A través de la integración de indicadores definidos por la NOM-001-SEDATU-2021, el sistema orienta a municipios, estados y organismos públicos en la autoevaluación de su infraestructura urbana, impulsando políticas de mejora continua.</p>
-                
-                <h3>Visión</h3>
-                <p>Nuestra visión es consolidarnos como una plataforma de referencia nacional para el análisis del espacio público, promoviendo ciudades más equitativas, habitables y sostenibles. Aspiramos a que, mediante el uso extendido del Geovisualizador, la planificación urbana en México evolucione hacia modelos basados en información abierta, monitoreo sistemático y participación ciudadana informada.</p>
-                
-                <h3>Relación con la NOM-001-SEDATU-2021</h3>
-                <p>El Geovisualizador está alineado con la NOM-001-SEDATU-2021 en los siguientes aspectos:</p>
-                <ul>
-                    <li><b>Clasificación estandarizada de espacios públicos:</b> La plataforma integra las categorías oficiales de la NOM (áreas verdes, plazas, infraestructuras peatonales, espacios naturales, equipamiento urbano, etc.), asegurando compatibilidad con los instrumentos de planeación urbana.</li>
-                    <li><b>Herramienta de apoyo para la autoevaluación municipal:</b> La NOM promueve que los gobiernos locales realicen autoevaluaciones periódicas. El Geovisualizador opera como una herramienta directa para cumplir este propósito, generando reportes, mapas temáticos y diagnósticos comparables.</li>
-                </ul>
-            </div>
-
+                <p>El objetivo del Geovisualizador es concentrar, procesar y visualizar datos geoespaciales sobre los espacios públicos...</p>
+                </div>
             <div id="modal-tab-web" class="modal-tab-pane">
                 <h2>Sitios Web de Interés</h2>
-                <ul>
+                 <ul>
                     <li><a href="https://www.merida.gob.mx/" target="_blank">Ayuntamiento de Mérida</a></li>
-                    <li><a href="https://www.anpr.org.mx/" target="_blank">ANPR (Asociación Nacional de Parques y Recreación)</a></li>
+                    <li><a href="https://www.anpr.org.mx/" target="_blank">ANPR</a></li>
                     <li><a href="https://www.gob.mx/sedatu" target="_blank">SEDATU</a></li>
                 </ul>
             </div>
-
             <div id="modal-tab-calificar" class="modal-tab-pane">
                 <h4>Califica este Geovisualizador</h4>
-                <p>Tu opinión nos ayuda a mejorar.</p>
-                <div class="rating-stars">
+                 <div class="rating-stars">
                     <i class="fa-solid fa-star" data-value="1"></i>
                     <i class="fa-solid fa-star" data-value="2"></i>
                     <i class="fa-solid fa-star" data-value="3"></i>
                     <i class="fa-solid fa-star" data-value="4"></i>
                     <i class="fa-solid fa-star" data-value="5"></i>
                 </div>
-                <textarea id="comment-box" rows="4" placeholder="Escribe tu comentario..."></textarea>
                 <button id="submit-rating-btn">Enviar Opinión</button>
-                <small id="rating-note">Nota: El envío de calificaciones es una demostración.</small>
             </div>
-
             <div id="modal-tab-contacto" class="modal-tab-pane">
                 <h2>Contacto</h2>
                 <div class="contact-person">
@@ -98,15 +129,14 @@
                     <h3>Urbanista Ismael Luna</h3>
                     <p>Correo: <a href="mailto:ia309745@gmail.com">ia309745@gmail.com</a></p>
                 </div>
-                
                 <div class="contact-affiliation">
                     <p>Universidad Nacional Autónoma de México (UNAM)</p>
                 </div>
             </div>
-            
         </div>
     </div>
 
+    <script src="https://unpkg.com/@turf/turf/turf.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="script.js"></script>
 </body>
