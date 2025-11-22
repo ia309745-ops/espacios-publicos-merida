@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Espacios Públicos de Mérida</title>
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -22,45 +25,12 @@
 
     <div id="map"></div>
 
-    <div id="left-controls">
-        <div id="transparency-control" title="Ajustar Opacidad de la Capa">
-            <label for="opacity-slider"><i class="fa-solid fa-layer-group"></i> Opacidad:</label>
-            <input type="range" id="opacity-slider" min="0" max="1" step="0.1" value="0.9">
-        </div>
-
-        <button id="btn-ubicacion" title="Encuéntrate">
-            <i class="fa-solid fa-location-dot"></i>
-        </button>
-    </div>
-
-    <div id="global-dashboard">
-        <h3>Diagnóstico Municipal</h3>
-        <div class="stat-row">
-            <span>Espacios Públicos:</span>
-            <strong id="stat-total-ep">Cargando...</strong>
-        </div>
-        <div class="stat-row">
-            <span>Superficie Total:</span>
-            <strong id="stat-total-area">...</strong>
-        </div>
-        <div class="stat-row">
-            <span>Población Total (INEGI):</span>
-            <strong id="stat-pob-total">Cargando...</strong>
-        </div>
-        <div class="stat-row highlight">
-            <span>Población Beneficiada:</span>
-            <strong id="stat-pob-beneficiada">Calculando...</strong>
-        </div>
-        <hr>
-        <button id="btn-toggle-radii">
-            <i class="fa-solid fa-circle-notch"></i> Ver Cobertura (Radios)
-        </button>
-    </div>
-
-    <div id="dashboard">
+    <div id="left-info-panel">
         <div id="tab-content">
             <div id="tab-info" class="tab-pane active">
-                <p id="info-default" style="display: block;">Selecciona un espacio para ver su impacto social.</p>
+                <p id="info-default" style="display: block;">
+                    <i class="fa-solid fa-arrow-pointer"></i> Selecciona un espacio en el mapa para ver su diagnóstico.
+                </p>
                 
                 <div id="info-panel" style="display: none;">
                     <h3 id="dash-titulo"></h3>
@@ -98,38 +68,98 @@
         </div>
     </div>
 
+    <div id="right-controls-panel">
+        <h3>Controles de Mapa</h3>
+        
+        <div id="filters-section">
+            <h4><i class="fa-solid fa-filter"></i> Filtrar por Tipo</h4>
+            <div id="category-filters">
+                <small>Cargando...</small>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="control-group">
+            <label for="opacity-slider"><i class="fa-solid fa-layer-group"></i> Opacidad:</label>
+            <input type="range" id="opacity-slider" min="0" max="1" step="0.1" value="0.9">
+        </div>
+
+        <button id="btn-ubicacion" title="Encuéntrate">
+            <i class="fa-solid fa-location-dot"></i> Mi Ubicación
+        </button>
+
+        <button id="btn-toggle-radii">
+            <i class="fa-solid fa-circle-notch"></i> Ver Cobertura (Radios)
+        </button>
+    </div>
+
+    <div id="bottom-legend">
+        <div class="legend-item">
+            <span class="legend-icon" style="background: linear-gradient(45deg, #238b45, #3498db, #f39c12); border: 1px solid white;"></span>
+            Espacios Públicos (Por Categoría)
+        </div>
+        <div class="legend-item">
+            <span class="legend-icon" style="border: 2px solid #333;"></span>
+            Límite Municipal de Mérida
+        </div>
+        <div class="legend-item">
+            <span class="legend-icon" style="border: 2px dashed rgba(255, 120, 0, 0.5);"></span>
+            Límite de la Zona Metropolitana
+        </div>
+        <div class="legend-item">
+            <span class="legend-icon" style="background: rgba(110, 190, 137, 0.2); border: 1px dashed #333; border-radius: 50%;"></span>
+            Radio de Influencia
+        </div>
+        <div class="legend-item">
+            <span class="legend-icon" style="background: rgba(179, 212, 190, 0.4); border: 1px solid #238b45;"></span>
+            Manzanas beneficiadas
+        </div>
+    </div>
+
+    <div id="global-dashboard">
+        <h3>Diagnóstico Municipal</h3>
+        <div class="stat-row">
+            <span>Espacios Públicos:</span>
+            <strong id="stat-total-ep">...</strong>
+        </div>
+        <div class="stat-row">
+            <span>Superficie Total:</span>
+            <strong id="stat-total-area">...</strong>
+        </div>
+        <div class="stat-row">
+            <span>Población Total (INEGI):</span>
+            <strong id="stat-pob-total">...</strong>
+        </div>
+        <div class="stat-row highlight">
+            <span>Población Beneficiada:</span>
+            <strong id="stat-pob-beneficiada">Calculando...</strong>
+        </div>
+    </div>
+
     <div id="modal-overlay">
         <div id="modal-container">
             <button id="modal-close-btn">×</button>
-            
             <div id="modal-tab-info" class="modal-tab-pane">
                 <h2>Información del Geovisualizador</h2>
                 <h3>Objetivo</h3>
                 <p>El objetivo del Geovisualizador es concentrar, procesar y visualizar datos geoespaciales sobre los espacios públicos, permitiendo identificar su distribución, tipología, estado físico, equipamiento y nivel de accesibilidad. Con esta plataforma se busca facilitar la toma de decisiones para autoridades, especialistas y ciudadanía, promoviendo la creación y mejoramiento de espacios públicos seguros, inclusivos, resilientes y socialmente cohesionados.</p>
-                <h3>Misión</h3>
-                <p>La misión del Geovisualizador es proveer una herramienta confiable, estandarizada y accesible que permita evaluar la calidad y disponibilidad del espacio público, contribuyendo a una gestión urbana más eficiente. A través de la integración de indicadores definidos por la NOM-001-SEDATU-2021, el sistema orienta a municipios, estados y organismos públicos en la autoevaluación de su infraestructura urbana, impulsando políticas de mejora continua.</p>
-                <h3>Visión</h3>
-                <p>Nuestra visión es consolidarnos como una plataforma de referencia nacional para el análisis del espacio público, promoviendo ciudades más equitativas, habitables y sostenibles. Aspiramos a que, mediante el uso extendido del Geovisualizador, la planificación urbana en México evolucione hacia modelos basados en información abierta, monitoreo sistemático y participación ciudadana informada.</p>
                 <h3>Relación con la NOM-001-SEDATU-2021</h3>
-                <p>El Geovisualizador está alineado con la NOM-001-SEDATU-2021 en los siguientes aspectos:</p>
                 <ul>
-                    <li><b>Clasificación estandarizada de espacios públicos:</b> La plataforma integra las categorías oficiales de la NOM (áreas verdes, plazas, infraestructuras peatonales, espacios naturales, equipamiento urbano, etc.), asegurando compatibilidad con los instrumentos de planeación urbana.</li>
-                    <li><b>Herramienta de apoyo para la autoevaluación municipal:</b> La NOM promueve que los gobiernos locales realicen autoevaluaciones periódicas. El Geovisualizador opera como una herramienta directa para cumplir este propósito, generando reportes, mapas temáticos y diagnósticos comparables.</li>
+                    <li><b>Clasificación estandarizada:</b> La plataforma integra las categorías oficiales de la NOM (áreas verdes, plazas, infraestructuras peatonales, espacios naturales, equipamiento urbano, etc.), asegurando compatibilidad con los instrumentos de planeación urbana.</li>
+                    <li><b>Autoevaluación municipal:</b> La NOM promueve que los gobiernos locales realicen autoevaluaciones periódicas. El Geovisualizador opera como una herramienta directa para cumplir este propósito, generando reportes, mapas temáticos y diagnósticos comparables.</li>
                 </ul>
             </div>
-
             <div id="modal-tab-web" class="modal-tab-pane">
                 <h2>Sitios Web de Interés</h2>
                 <ul>
                     <li><a href="https://www.merida.gob.mx/" target="_blank">Ayuntamiento de Mérida</a></li>
-                    <li><a href="https://www.anpr.org.mx/" target="_blank">ANPR (Asociación Nacional de Parques y Recreación)</a></li>
+                    <li><a href="https://www.anpr.org.mx/" target="_blank">ANPR</a></li>
                     <li><a href="https://www.gob.mx/sedatu" target="_blank">SEDATU</a></li>
                 </ul>
             </div>
-
             <div id="modal-tab-calificar" class="modal-tab-pane">
                 <h4>Califica este Geovisualizador</h4>
-                <p>Tu opinión nos ayuda a mejorar.</p>
                 <div class="rating-stars">
                     <i class="fa-solid fa-star" data-value="1"></i>
                     <i class="fa-solid fa-star" data-value="2"></i>
@@ -139,9 +169,7 @@
                 </div>
                 <textarea id="comment-box" rows="4" placeholder="Escribe tu comentario..."></textarea>
                 <button id="submit-rating-btn">Enviar Opinión</button>
-                <small id="rating-note">Nota: El envío de calificaciones es una demostración.</small>
             </div>
-
             <div id="modal-tab-contacto" class="modal-tab-pane">
                 <h2>Contacto</h2>
                 <div class="contact-person">

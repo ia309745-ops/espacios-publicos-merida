@@ -4,7 +4,7 @@ html, body {
     font-family: 'Open Sans', sans-serif; overflow: hidden;
 }
 
-/* --- 1. Encabezado Superior (Fijo) --- */
+/* --- Encabezado --- */
 #main-header {
     position: absolute; top: 0; left: 0; width: 100%; height: 60px;
     background: #238b45; color: white; display: flex; justify-content: space-between;
@@ -17,8 +17,6 @@ html, body {
     background-repeat: repeat; opacity: 0.4; z-index: -1; 
 }
 #header-title { margin: 0; font-size: 1.5em; font-weight: 600; }
-
-/* --- Pestañas --- */
 .tabs { display: flex; }
 .tab-link {
     padding: 10px 15px; cursor: pointer; background: none; border: none;
@@ -28,57 +26,68 @@ html, body {
 .tab-link:hover { background: rgba(255,255,255,0.1); }
 .tab-link.active { font-weight: 700; color: #ffffff; border-bottom-color: #66c2a4; }
 
-/* --- 2. Mapa y Controles Leaflet --- */
+/* --- Mapa --- */
 #map { position: absolute; top: 60px; left: 0; width: 100%; height: calc(100% - 60px); z-index: 1; }
 
-/* --- CONTENEDOR DE CONTROLES IZQUIERDA --- */
-#left-controls {
-    position: absolute;
-    top: 75px; 
-    left: 12px; 
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+/* --- 1. PANEL IZQUIERDO (INFO DEL ESPACIO) --- */
+#left-info-panel {
+    position: absolute; top: 75px; left: 15px; width: 300px;
+    background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    z-index: 1000; padding: 15px; box-sizing: border-box;
+    max-height: calc(100vh - 100px); overflow-y: auto;
 }
+#info-panel h3 { margin: 0 0 10px 0; font-size: 1.2em; font-weight: bold; text-align: center; color: #333; }
+#info-panel p { margin: 6px 0; font-size: 0.9em; color: #444; word-wrap: break-word; }
 
-/* Slider Transparencia */
-#transparency-control {
-    background: white;
-    padding: 8px 10px;
-    border-radius: 4px;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
-    width: 180px;
-    font-size: 0.85em;
-    color: #333;
+.population-stats { margin-top: 15px; padding-top: 10px; border-top: 1px solid #ddd; }
+.population-stats h4 { margin: 0 0 10px 0; font-size: 0.9em; color: #666; text-align: center; }
+.pob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pob-item {
+    background: #fff; border: 1px solid #eee; border-radius: 6px; padding: 6px;
+    text-align: center; display: flex; flex-direction: column; align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
-#transparency-control label {
-    display: block; font-weight: bold; margin-bottom: 5px;
-}
-#opacity-slider { width: 100%; height: 6px; cursor: pointer; }
+.pob-item i { font-size: 1.1em; color: #238b45; margin-bottom: 3px; } 
+.pob-item span { font-weight: bold; font-size: 1.1em; color: #333; }
+.pob-item small { font-size: 0.7em; color: #777; }
 
-/* Botón Ubicación */
-#btn-ubicacion {
-    width: 32px; height: 32px;
-    background: #fff; color: #333;
-    border: none; border-radius: 4px;
-    cursor: pointer; font-size: 1.2em;
-    display: flex; justify-content: center; align-items: center;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
-    transition: all 0.2s;
+/* --- 2. PANEL DERECHO INFERIOR (CONTROLES DE CAPAS) --- */
+#right-controls-panel {
+    position: absolute; 
+    bottom: 25px; 
+    right: 15px; 
+    width: 260px; 
+    background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    z-index: 1000; padding: 15px; box-sizing: border-box; font-size: 0.9em;
+    max-height: calc(100vh - 300px); overflow-y: auto;
 }
-#btn-ubicacion:hover { background: #f4f4f4; color: #007bff; }
+#right-controls-panel h3 { margin-top: 0; color: #238b45; border-bottom: 1px solid #eee; padding-bottom: 5px; font-size: 1.1em;}
+#right-controls-panel h4 { margin: 0 0 5px 0; color: #555; font-size: 0.95em; }
+#right-controls-panel hr { border: 0; border-top: 1px solid #eee; margin: 10px 0; }
 
-/* Ajuste Zoom Leaflet (Para que no choque con los controles) */
-.leaflet-top.leaflet-left {
-    margin-top: 120px; /* Espacio vertical suficiente */
-    z-index: 999;
+.control-group { margin-bottom: 10px; }
+.control-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #333; }
+#opacity-slider { width: 100%; height: 5px; cursor: pointer; }
+
+#btn-toggle-radii, #btn-ubicacion {
+    width: 100%; padding: 8px; margin-top: 8px;
+    background: #f8f9fa; border: 1px solid #ddd; border-radius: 4px;
+    cursor: pointer; font-weight: 600; color: #333; transition: background 0.2s;
+    text-align: left;
 }
-.leaflet-control-zoom { border-radius: 4px; }
+#btn-toggle-radii:hover, #btn-ubicacion:hover { background: #e9ecef; }
+#btn-toggle-radii i, #btn-ubicacion i { margin-right: 8px; color: #238b45; }
 
-/* --- 3. Dashboard Global --- */
+#category-filters { max-height: 120px; overflow-y: auto; border: 1px solid #eee; padding: 5px; border-radius: 4px; margin-top: 5px; }
+.filter-item { display: flex; align-items: center; margin-bottom: 5px; }
+.filter-item input { margin-right: 8px; cursor: pointer; }
+.filter-item label { font-size: 0.9em; cursor: pointer; color: #444; }
+
+/* --- 3. DASHBOARD GLOBAL --- */
 #global-dashboard {
-    position: absolute; top: 75px; right: 15px; width: 300px; 
+    position: absolute; top: 75px; 
+    right: 15px; 
+    width: 260px; 
     background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
     z-index: 1000; padding: 15px; box-sizing: border-box; font-size: 0.9em;
 }
@@ -86,38 +95,41 @@ html, body {
 .stat-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
 .stat-row.highlight { 
     background: #e8f5e9; padding: 5px; border-radius: 4px; 
-    color: #1b5e20; font-weight: bold; font-size: 1.1em;
+    color: #1b5e20; font-weight: bold; font-size: 1.1em; margin-top: 5px;
 }
-#btn-toggle-radii {
-    width: 100%; padding: 8px; margin-top: 10px;
-    background: #007bff; color: white; border: none; border-radius: 4px;
-    cursor: pointer; font-weight: bold;
-}
-#btn-toggle-radii:hover { background: #238b45; }
 
-/* --- 4. Dashboard Individual --- */
-#dashboard {
-    position: absolute; bottom: 30px; right: 15px; width: 300px;
-    background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    z-index: 1000; padding: 15px; box-sizing: border-box;
-    max-height: calc(100vh - 350px); overflow-y: auto;
+/* --- 4. SIMBOLOGÍA AISLADA --- */
+#bottom-legend {
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: white; padding: 8px 15px; border-radius: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3); z-index: 1000;
+    display: flex; gap: 15px; align-items: center; flex-wrap: wrap; justify-content: center;
 }
-#info-panel h3 { margin: 0 0 10px 0; font-size: 1.4em; font-weight: bold; text-align: center; color: #333; }
-#info-panel p { margin: 8px 0; font-size: 0.95em; color: #444; word-wrap: break-word; }
+.legend-item { display: flex; align-items: center; font-size: 0.85em; color: #333; font-weight: 600; }
+.legend-icon { width: 16px; height: 16px; display: inline-block; margin-right: 6px; flex-shrink: 0; }
 
-.population-stats { margin-top: 15px; padding-top: 10px; border-top: 1px solid #ddd; }
-.population-stats h4 { margin: 0 0 10px 0; font-size: 0.9em; color: #666; text-align: center; }
-.pob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.pob-item {
-    background: #fff; border: 1px solid #eee; border-radius: 6px; padding: 8px;
-    text-align: center; display: flex; flex-direction: column; align-items: center;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+/* --- POSICIONAMIENTO CONTROLES LEAFLET --- */
+
+/* Mover ZOOM a la derecha del panel izquierdo y SUBIRLO (top: 15px relativo al mapa) */
+.leaflet-top.leaflet-left {
+    left: 320px; 
+    top: 15px; /* CAMBIO: Subido para alinear con la parte superior del panel */
 }
-.pob-item i { font-size: 1.3em; color: #238b45; margin-bottom: 5px; } 
-.pob-item span { font-weight: bold; font-size: 1.2em; color: #333; }
-.pob-item small { font-size: 0.75em; color: #777; }
 
-/* --- 5. Modal Global --- */
+/* Control de Capas Abajo Izquierda */
+.leaflet-bottom.leaflet-left {
+    bottom: 20px;
+    left: 15px;
+    margin-bottom: 0;
+}
+
+/* Estilos internos de Leaflet */
+.leaflet-control-layers { border-radius: 8px !important; box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: none !important; }
+.leaflet-buffer-layer { fillColor: '#007bff'; fillOpacity: 0.1; color: '#007bff'; weight: 2; dashArray: '5, 5'; }
+.leaflet-radius-line { stroke: true; color: #333; weight: 2; dashArray: '5, 5'; opacity: 0.8; }
+.leaflet-radius-tooltip { background: none; border: none; box-shadow: none; font-weight: bold; font-size: 1.1em; }
+
+/* --- Modal --- */
 #modal-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.6); z-index: 2000;
@@ -127,27 +139,39 @@ html, body {
     background: white; width: 90%; max-width: 700px; max-height: 85vh;
     border-radius: 8px; padding: 25px; position: relative; overflow-y: auto;
 }
+#modal-container p, #modal-container li {
+    white-space: normal; word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;
+}
 #modal-close-btn { position: absolute; top: 10px; right: 15px; font-size: 2em; cursor: pointer; border:none; background:none; color:#aaa;}
 .modal-tab-pane { display: none; }
 .modal-tab-pane.active { display: block; }
 #modal-container ul { list-style: none; padding-left: 0; }
-#modal-container li { background: #f4f4f4; margin-bottom: 8px; border-radius: 4px; }
-#modal-container li a { display: block; padding: 12px; text-decoration: none; color: #238b45; font-weight: bold; }
-
-/* Contacto */
-.contact-person { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
-.contact-affiliation { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-style: italic; color: #555; }
-
-/* Estrellas */
+#modal-container li { 
+    background: #f4f4f4; margin-bottom: 8px; border-radius: 4px; 
+    padding: 10px; 
+}
+#modal-container li a { display: block; text-decoration: none; color: #238b45; font-weight: bold; }
 .rating-stars { font-size: 1.8em; color: #ccc; cursor: pointer; margin-bottom: 15px; }
 .rating-stars .fa-star.selected, .rating-stars .fa-star:hover { color: #f7d32a; }
 #comment-box { width: calc(100% - 20px); border: 1px solid #ccc; border-radius: 4px; padding: 10px; margin-bottom: 10px; }
 #submit-rating-btn { width: 100%; padding: 10px; background: #238b45; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-#rating-note { font-size: 0.8em; color: #777; font-style: italic; display: block; margin-top: 10px; }
+.contact-person { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+.contact-affiliation { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-style: italic; color: #555; }
 
-/* Estilos Mapa */
-.leaflet-bottom.leaflet-left { bottom: 30px; left: 15px; z-index: 999; }
-.leaflet-control-layers { border-radius: 8px !important; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-.leaflet-buffer-layer { fillColor: '#007bff'; fillOpacity: 0.1; color: '#007bff'; weight: 2; dashArray: '5, 5'; }
-.leaflet-radius-line { stroke: true; color: #333; weight: 2; dashArray: '5, 5'; opacity: 0.8; }
-.leaflet-radius-tooltip { background: none; border: none; box-shadow: none; font-weight: bold; font-size: 1.1em; }
+/* --- RESPONSIVIDAD --- */
+@media (max-width: 768px) {
+    #header-title { font-size: 1em; }
+    #global-dashboard { display: none; } 
+    #bottom-legend { display: none; } 
+    
+    #left-info-panel {
+        top: auto; bottom: 0; left: 0; width: 100%; height: 35vh;
+        border-radius: 15px 15px 0 0; z-index: 1002;
+    }
+    #right-controls-panel {
+        top: 65px; left: 10px; right: 10px; bottom: auto; width: auto;
+        max-height: 150px; z-index: 1001;
+    }
+    .leaflet-control-zoom { display: none; }
+    .leaflet-bottom .leaflet-control { margin-bottom: 160px; } 
+}
