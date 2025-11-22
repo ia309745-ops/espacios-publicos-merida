@@ -1,11 +1,10 @@
 /* --- Configuración Global --- */
 html, body {
     height: 100%; width: 100%; margin: 0; padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    overflow: hidden;
+    font-family: 'Open Sans', sans-serif; overflow: hidden;
 }
 
-/* --- Encabezado Superior --- */
+/* --- 1. Encabezado Superior (Fijo) --- */
 #main-header {
     position: absolute; top: 0; left: 0; width: 100%; height: 60px;
     background: #238b45; color: white; display: flex; justify-content: space-between;
@@ -22,81 +21,103 @@ html, body {
 /* --- Pestañas --- */
 .tabs { display: flex; }
 .tab-link {
-    padding: 10px 5px; cursor: pointer; background: none; border: none;
+    padding: 10px 15px; cursor: pointer; background: none; border: none;
     font-size: 0.95em; color: #f0f0f0; border-bottom: 3px solid transparent;
-    margin: 0 5px; font-weight: 400;
+    margin: 0 5px; font-weight: 500;
 }
 .tab-link:hover { background: rgba(255,255,255,0.1); }
 .tab-link.active { font-weight: 700; color: #ffffff; border-bottom-color: #66c2a4; }
 
-/* --- Mapa --- */
+/* --- 2. Mapa y Controles Leaflet --- */
 #map { position: absolute; top: 60px; left: 0; width: 100%; height: calc(100% - 60px); z-index: 1; }
 
-/* --- Botón de Ubicación (Arriba del Zoom) --- */
+/* --- CONTENEDOR DE CONTROLES IZQUIERDA --- */
 #left-controls {
     position: absolute;
-    top: 75px; /* Justo debajo del header (60px + 15px margen) */
-    left: 12px; /* Alineado con el control de zoom de Leaflet */
+    top: 75px; 
+    left: 12px; 
     z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
+
+/* Slider Transparencia */
+#transparency-control {
+    background: white;
+    padding: 8px 10px;
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    width: 180px;
+    font-size: 0.85em;
+    color: #333;
+}
+#transparency-control label {
+    display: block; font-weight: bold; margin-bottom: 5px;
+}
+#opacity-slider { width: 100%; height: 6px; cursor: pointer; }
+
+/* Botón Ubicación */
 #btn-ubicacion {
     width: 32px; height: 32px;
     background: #fff; color: #333;
-    border: 2px solid rgba(0,0,0,0.2); border-radius: 4px;
+    border: none; border-radius: 4px;
     cursor: pointer; font-size: 1.2em;
     display: flex; justify-content: center; align-items: center;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.65); /* Sombra similar a Leaflet */
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
     transition: all 0.2s;
 }
 #btn-ubicacion:hover { background: #f4f4f4; color: #007bff; }
 
-/* Ajuste del Control de Zoom de Leaflet */
-/* Lo empujamos hacia abajo para dar espacio al botón de ubicación */
+/* Ajuste Zoom Leaflet (Para que no choque con los controles) */
 .leaflet-top.leaflet-left {
-    margin-top: 50px; 
+    margin-top: 120px; /* Espacio vertical suficiente */
     z-index: 999;
 }
+.leaflet-control-zoom { border-radius: 4px; }
 
-/* --- Dashboard Global (Arriba Derecha) --- */
+/* --- 3. Dashboard Global --- */
 #global-dashboard {
-    position: absolute; top: 75px; right: 15px; width: 300px; background: white;
-    border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); z-index: 1000;
-    padding: 15px; box-sizing: border-box; font-size: 0.9em;
+    position: absolute; top: 75px; right: 15px; width: 300px; 
+    background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
+    z-index: 1000; padding: 15px; box-sizing: border-box; font-size: 0.9em;
 }
 #global-dashboard h3 { margin-top: 0; color: #238b45; border-bottom: 1px solid #eee; padding-bottom: 5px;}
 .stat-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
-.stat-row.highlight { background: #e8f5e9; padding: 5px; border-radius: 4px; color: #1b5e20; }
+.stat-row.highlight { 
+    background: #e8f5e9; padding: 5px; border-radius: 4px; 
+    color: #1b5e20; font-weight: bold; font-size: 1.1em;
+}
 #btn-toggle-radii {
     width: 100%; padding: 8px; margin-top: 10px;
     background: #007bff; color: white; border: none; border-radius: 4px;
     cursor: pointer; font-weight: bold;
 }
-#btn-toggle-radii:hover { background: #0056b3; }
+#btn-toggle-radii:hover { background: #238b45; }
 
-/* --- Dashboard Individual (Abajo Derecha) --- */
+/* --- 4. Dashboard Individual --- */
 #dashboard {
     position: absolute; bottom: 30px; right: 15px; width: 300px;
     background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     z-index: 1000; padding: 15px; box-sizing: border-box;
     max-height: calc(100vh - 350px); overflow-y: auto;
 }
-#info-default { color: #555; font-style: italic; text-align: center; }
 #info-panel h3 { margin: 0 0 10px 0; font-size: 1.4em; font-weight: bold; text-align: center; color: #333; }
 #info-panel p { margin: 8px 0; font-size: 0.95em; color: #444; word-wrap: break-word; }
 
-/* --- Estadísticas de Población --- */
 .population-stats { margin-top: 15px; padding-top: 10px; border-top: 1px solid #ddd; }
 .population-stats h4 { margin: 0 0 10px 0; font-size: 0.9em; color: #666; text-align: center; }
 .pob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .pob-item {
-    background: #f9f9f9; border-radius: 6px; padding: 8px;
+    background: #fff; border: 1px solid #eee; border-radius: 6px; padding: 8px;
     text-align: center; display: flex; flex-direction: column; align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
-.pob-item i { font-size: 1.2em; color: #238b45; margin-bottom: 5px; }
-.pob-item span { font-weight: bold; font-size: 1.1em; color: #333; }
+.pob-item i { font-size: 1.3em; color: #238b45; margin-bottom: 5px; } 
+.pob-item span { font-weight: bold; font-size: 1.2em; color: #333; }
 .pob-item small { font-size: 0.75em; color: #777; }
 
-/* --- Estilos del Modal Global --- */
+/* --- 5. Modal Global --- */
 #modal-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.6); z-index: 2000;
@@ -104,27 +125,27 @@ html, body {
 }
 #modal-container {
     background: white; width: 90%; max-width: 700px; max-height: 85vh;
-    border-radius: 8px; padding: 25px; position: relative; overflow-y: auto; /* Permite scroll */
+    border-radius: 8px; padding: 25px; position: relative; overflow-y: auto;
 }
 #modal-close-btn { position: absolute; top: 10px; right: 15px; font-size: 2em; cursor: pointer; border:none; background:none; color:#aaa;}
 .modal-tab-pane { display: none; }
 .modal-tab-pane.active { display: block; }
 #modal-container ul { list-style: none; padding-left: 0; }
 #modal-container li { background: #f4f4f4; margin-bottom: 8px; border-radius: 4px; }
-#modal-container li a { display: block; padding: 12px; text-decoration: none; color: #005a87; font-weight: bold; }
+#modal-container li a { display: block; padding: 12px; text-decoration: none; color: #238b45; font-weight: bold; }
 
-/* --- Contacto --- */
+/* Contacto */
 .contact-person { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
 .contact-affiliation { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-style: italic; color: #555; }
 
-/* --- Estrellas --- */
+/* Estrellas */
 .rating-stars { font-size: 1.8em; color: #ccc; cursor: pointer; margin-bottom: 15px; }
 .rating-stars .fa-star.selected, .rating-stars .fa-star:hover { color: #f7d32a; }
 #comment-box { width: calc(100% - 20px); border: 1px solid #ccc; border-radius: 4px; padding: 10px; margin-bottom: 10px; }
 #submit-rating-btn { width: 100%; padding: 10px; background: #238b45; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
 #rating-note { font-size: 0.8em; color: #777; font-style: italic; display: block; margin-top: 10px; }
 
-/* --- Estilos del Mapa y Análisis --- */
+/* Estilos Mapa */
 .leaflet-bottom.leaflet-left { bottom: 30px; left: 15px; z-index: 999; }
 .leaflet-control-layers { border-radius: 8px !important; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
 .leaflet-buffer-layer { fillColor: '#007bff'; fillOpacity: 0.1; color: '#007bff'; weight: 2; dashArray: '5, 5'; }

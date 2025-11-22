@@ -1,7 +1,6 @@
 // --- 1. INICIALIZACIÓN DEL MAPA ---
 var centroMerida = [20.9754, -89.6169];
-// Zoom Control activado por defecto (lo movemos con CSS)
-var map = L.map('map', { zoomControl: true }).setView(centroMerida, 13);
+var map = L.map('map', { zoomControl: true }).setView(centroMerida, 11);
 
 // --- CAPAS BASE ---
 var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OSM' });
@@ -9,15 +8,19 @@ var cartoLight = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x
 var cartoDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19, attribution: '© CARTO' });
 var satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: 'Tiles © Esri' });
 
-osm.addTo(map); // Capa por defecto
+osm.addTo(map); 
 
 L.control.layers({ "Calles": osm, "Claro": cartoLight, "Oscuro": cartoDark, "Satélite": satellite }, null, { position: 'bottomleft' }).addTo(map);
 
 // --- 2. VARIABLES GLOBALES ---
 var espaciosData = null;
-var manzanasData = null; 
-var geojsonLayer; // Capa de Espacios Públicos
-var manzanaHighlightLayer = L.layerGroup().addTo(map); // Capa para manzanas resaltadas (tenues)
+var manzanasData = null;
+var limiteData = null;
+
+var geojsonLayer; 
+var manzanaHighlightLayer = L.layerGroup().addTo(map); 
+var limiteLayer = L.layerGroup().addTo(map); 
+
 var selectedLayer = null; 
 var bufferLayer = null; 
 var radiusLineLayer = null;
@@ -46,20 +49,23 @@ var btnToggleRadii = document.getElementById('btn-toggle-radii');
 var modalOverlay = document.getElementById('modal-overlay');
 var modalCloseBtn = document.getElementById('modal-close-btn');
 
+var opacitySlider = document.getElementById('opacity-slider'); 
 
 // --- 3. ESTILOS ---
 
-// Estilo Verde Sólido para Espacios Públicos
+// Estilo Base de los polígonos (VERDE)
 function style(feature) {
+    var currentOpacity = parseFloat(opacitySlider.value);
     return { 
-        fillColor: '#238b45', 
+        fillColor: '#238b45', // Verde
         weight: 1, 
         opacity: 1, 
         color: 'white', 
-        fillOpacity: 0.9 
+        fillOpacity: currentOpacity 
     };
 }
 
+// Estilo de selección (Amarillo/Verde)
 var highlightStyle = { 
     weight: 5, 
     color: '#FFFF00', 
@@ -68,20 +74,19 @@ var highlightStyle = {
 };
 
 var bufferStyle = { 
-    fillColor: '#007bff', 
+    fillColor: '#238b45', 
     fillOpacity: 0.1, 
     stroke: true, 
-    color: '#007bff', 
+    color: '#9ad6aeff', 
     weight: 2, 
     dashArray: '5, 5' 
 };
 
-// --- 4. FUNCIONES AUXILIARES (PANEL Y RESET) ---
+// --- 4. FUNCIONES AUXILIARES ---
 
 function updatePanel(props) {
     tituloEl.innerHTML = props.CLAS_IMPLA || "Sin Clasificación";
     
-    // Coordenadas Google Maps
     var center = selectedLayer.getBounds().getCenter();
     var gmapsLink = `https://www.google.com/maps?q=${center.lat.toFixed(6)},${center.lng.toFixed(6)}`;
     modulosEl.innerHTML = `<b>Ubicación:</b> <a href="${gmapsLink}" target="_blank">Ver en Google Maps</a><br><b>Tipo:</b> ` + (props.MODULOS || "No definido");
@@ -102,18 +107,38 @@ function resetHighlight() {
     }
     if (bufferLayer) map.removeLayer(bufferLayer);
     if (radiusLineLayer) map.removeLayer(radiusLineLayer);
-    manzanaHighlightLayer.clearLayers(); // Borra las manzanas iluminadas
+    manzanaHighlightLayer.clearLayers();
     
-    // Resetear contadores
     pobTotalEl.innerText = "0";
     pob014El.innerText = "0";
     pob65El.innerText = "0";
     pobDiscEl.innerText = "0";
 }
 
-// --- 5. ANÁLISIS ESPACIAL (TURF.JS) ---
+function setLayerOpacity(newOpacity) {
+    if (geojsonLayer) {
+        geojsonLayer.setStyle(function(feature) {
+            return {
+                fillColor: '#22ec66ff', 
+                weight: 1, 
+                opacity: 1, 
+                color: 'white', 
+                fillOpacity: newOpacity
+            };
+        });
+        
+        if (selectedLayer) {
+            selectedLayer.setStyle({
+                fillOpacity: newOpacity,
+                weight: 5,
+                color: '#FFFF00' 
+            });
+        }
+    }
+}
 
-// Cálculo Global
+// --- 5. ANÁLISIS ESPACIAL ---
+
 function calculateGlobalCoverage() {
     if (!espaciosData || !manzanasData) return;
     let totalPobBeneficiada = 0;
@@ -141,7 +166,6 @@ function calculateGlobalCoverage() {
     statPobBeneficiada.innerText = totalPobBeneficiada.toLocaleString();
 }
 
-// Resalta y suma la población (Análisis Individual)
 function highlightManzanas(centerPoint, radiusMeters) {
     manzanaHighlightLayer.clearLayers();
     if (!manzanasData) return;
@@ -160,15 +184,15 @@ function highlightManzanas(centerPoint, radiusMeters) {
             sum65 += (parseFloat(props.POB23) || 0);
             sumDisc += (parseFloat(props.DISC1) || 0);
             
-            // Dibuja el contorno tenue de la manzana
+            // CORRECCIÓN: Manzanas con contorno VERDE y relleno tenue
             L.geoJSON(manzana, {
                 style: {
-                    fillColor: '#008080', 
-                    fillOpacity: 0.05, // Muy tenue
-                    color: '#4CAF50', // Borde verde
+                    fillColor: '#b3d4beff', 
+                    fillOpacity: 0.1, 
+                    color: '#238b45', // Borde Verde
                     weight: 1, 
                     dashArray: '2, 4', 
-                    opacity: 0.8,
+                    opacity: 0.4,
                     interactive: false
                 }
             }).addTo(manzanaHighlightLayer);
@@ -181,7 +205,23 @@ function highlightManzanas(centerPoint, radiusMeters) {
     pobDiscEl.innerText = sumDisc.toLocaleString();
 }
 
-// --- 6. FUNCIÓN DE RENDERIZADO DEL MAPA ---
+// --- 6. RENDERIZADO ---
+
+function renderLimite(geojsonData) {
+    limiteLayer.clearLayers();
+    L.geoJSON(geojsonData, {
+        style: {
+            fill: false,
+            color: '#333333', // Contorno oscuro para el límite
+            weight: 3,
+            dashArray: '10, 5',
+            opacity: 0.8,
+            lineCap: 'square'
+        },
+        interactive: false 
+    }).addTo(limiteLayer);
+}
+
 function renderMap(featuresToRender) {
     resetHighlight();
     if (geojsonLayer) map.removeLayer(geojsonLayer);
@@ -189,28 +229,31 @@ function renderMap(featuresToRender) {
     allRadiiLayer.clearLayers();
 
     geojsonLayer = L.geoJSON(featuresToRender, {
-        style: style,
+        style: style, 
         onEachFeature: function (feature, layer) {
-            // Pre-crear círculos para la cobertura global
             var rad = parseFloat(feature.properties.RAD_INF || 0);
             if (rad > 0) {
                 var circle = L.circle(layer.getBounds().getCenter(), {
                     radius: rad,
                     stroke: false,
-                    fillColor: '#007bff',
-                    fillOpacity: 0.15,
+                    fillColor: '#6ebe89ff',
+                    fillOpacity: 0.10,
                     interactive: false
                 });
                 allRadiiLayer.addLayer(circle);
             }
 
-            // Evento Clic
             layer.on('click', function (e) {
                 L.DomEvent.stopPropagation(e);
                 resetHighlight();
                 
                 selectedLayer = e.target;
-                selectedLayer.setStyle(highlightStyle);
+                selectedLayer.setStyle({
+                    weight: 5, 
+                    color: '#FFFF00', 
+                    dashArray: '', 
+                    fillOpacity: parseFloat(opacitySlider.value)
+                });
                 selectedLayer.bringToFront();
                 
                 updatePanel(feature.properties);
@@ -219,15 +262,12 @@ function renderMap(featuresToRender) {
                 if (radius > 0) {
                     var centerLatLng = layer.getBounds().getCenter();
                     
-                    // Buffer Visual
                     bufferLayer = L.circle(centerLatLng, { ...bufferStyle, radius: radius }).addTo(map);
                     
-                    // Línea de Radio
                     var edgePoint = [centerLatLng.lat, bufferLayer.getBounds().getNorthEast().lng];
                     radiusLineLayer = L.polyline([centerLatLng, edgePoint], { className: 'leaflet-radius-line' }).addTo(map);
                     radiusLineLayer.bindTooltip(radius.toFixed(0) + " m", { permanent: true, direction: 'right', className: 'leaflet-radius-tooltip' }).openTooltip();
 
-                    // Análisis Turf
                     var turfPoint = turf.point([centerLatLng.lng, centerLatLng.lat]);
                     highlightManzanas(turfPoint, radius);
 
@@ -240,8 +280,7 @@ function renderMap(featuresToRender) {
     }).addTo(map);
 }
 
-
-// --- 7. CARGA DE DATOS BLINDADA ---
+// --- 7. CARGA DE DATOS ---
 async function cargarDatos() {
     try {
         const responseEspacios = await fetch('espacios_publicos.geojson');
@@ -252,13 +291,17 @@ async function cargarDatos() {
         if (!responseManzanas.ok) throw new Error("Falta 'manzanas.geojson'");
         const manzanas = await responseManzanas.json();
 
+        const responseLimite = await fetch('limite.geojson');
+        if (!responseLimite.ok) throw new Error("Falta 'limite.geojson'");
+        const limite = await responseLimite.json();
+
         espaciosData = espacios;
         manzanasData = manzanas;
+        limiteData = limite;
 
-        // Renderizar Mapa
+        renderLimite(limiteData); 
         renderMap(espaciosData.features);
         
-        // Estadísticas Globales
         var totalEspacios = espaciosData.features.length;
         var totalArea = espaciosData.features.reduce((sum, f) => sum + (parseFloat(f.properties.SUP_TER_HA) || 0), 0);
         var totalPobMuni = manzanasData.features.reduce((sum, f) => sum + (parseFloat(f.properties.POB1) || 0), 0);
@@ -275,12 +318,14 @@ async function cargarDatos() {
     }
 }
 
-cargarDatos(); // Ejecutar carga
+cargarDatos();
 
+// --- 8. LISTENERS ---
 
-// --- 8. CONTROLES DE UI ---
+opacitySlider.addEventListener('input', function() {
+    setLayerOpacity(parseFloat(this.value));
+});
 
-// Botón Ubicación (Solo listener, el CSS lo posiciona)
 document.getElementById('btn-ubicacion').addEventListener('click', function() {
     navigator.geolocation.getCurrentPosition(function(position) {
         var loc = [position.coords.latitude, position.coords.longitude];
@@ -289,7 +334,6 @@ document.getElementById('btn-ubicacion').addEventListener('click', function() {
     }, () => alert('No se pudo obtener ubicación'));
 });
 
-// Botón Cobertura Global
 btnToggleRadii.addEventListener('click', function() {
     if (isRadiiVisible) {
         map.removeLayer(allRadiiLayer);
@@ -301,14 +345,12 @@ btnToggleRadii.addEventListener('click', function() {
     isRadiiVisible = !isRadiiVisible;
 });
 
-// Clic Mapa (Reset)
 map.on('click', function() {
     resetHighlight();
     infoDefault.style.display = 'block';
     infoPanel.style.display = 'none';
 });
 
-// Modales y Pestañas
 document.querySelectorAll('#main-header .tab-link').forEach(btn => {
     btn.addEventListener('click', function() {
         var id = this.getAttribute('data-tab');
@@ -320,7 +362,6 @@ document.querySelectorAll('#main-header .tab-link').forEach(btn => {
 modalCloseBtn.addEventListener('click', () => modalOverlay.style.display = 'none');
 modalOverlay.addEventListener('click', (e) => { if(e.target === modalOverlay) modalOverlay.style.display = 'none'; });
 
-// Estrellas y Enviar Opinión
 var stars = document.querySelectorAll('#modal-tab-calificar .rating-stars .fa-star');
 stars.forEach(function(star) {
     star.addEventListener('click', function(e) {

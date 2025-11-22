@@ -23,6 +23,11 @@
     <div id="map"></div>
 
     <div id="left-controls">
+        <div id="transparency-control" title="Ajustar Opacidad de la Capa">
+            <label for="opacity-slider"><i class="fa-solid fa-layer-group"></i> Opacidad:</label>
+            <input type="range" id="opacity-slider" min="0" max="1" step="0.1" value="0.9">
+        </div>
+
         <button id="btn-ubicacion" title="Encuéntrate">
             <i class="fa-solid fa-location-dot"></i>
         </button>
@@ -55,7 +60,7 @@
     <div id="dashboard">
         <div id="tab-content">
             <div id="tab-info" class="tab-pane active">
-                <p id="info-default">Selecciona un espacio para ver su impacto social.</p>
+                <p id="info-default" style="display: block;">Selecciona un espacio para ver su impacto social.</p>
                 
                 <div id="info-panel" style="display: none;">
                     <h3 id="dash-titulo"></h3>
@@ -95,19 +100,16 @@
 
     <div id="modal-overlay">
         <div id="modal-container">
-            <button id="modal-close-btn">&times;</button>
+            <button id="modal-close-btn">×</button>
             
             <div id="modal-tab-info" class="modal-tab-pane">
                 <h2>Información del Geovisualizador</h2>
                 <h3>Objetivo</h3>
                 <p>El objetivo del Geovisualizador es concentrar, procesar y visualizar datos geoespaciales sobre los espacios públicos, permitiendo identificar su distribución, tipología, estado físico, equipamiento y nivel de accesibilidad. Con esta plataforma se busca facilitar la toma de decisiones para autoridades, especialistas y ciudadanía, promoviendo la creación y mejoramiento de espacios públicos seguros, inclusivos, resilientes y socialmente cohesionados.</p>
-                
                 <h3>Misión</h3>
                 <p>La misión del Geovisualizador es proveer una herramienta confiable, estandarizada y accesible que permita evaluar la calidad y disponibilidad del espacio público, contribuyendo a una gestión urbana más eficiente. A través de la integración de indicadores definidos por la NOM-001-SEDATU-2021, el sistema orienta a municipios, estados y organismos públicos en la autoevaluación de su infraestructura urbana, impulsando políticas de mejora continua.</p>
-                
                 <h3>Visión</h3>
                 <p>Nuestra visión es consolidarnos como una plataforma de referencia nacional para el análisis del espacio público, promoviendo ciudades más equitativas, habitables y sostenibles. Aspiramos a que, mediante el uso extendido del Geovisualizador, la planificación urbana en México evolucione hacia modelos basados en información abierta, monitoreo sistemático y participación ciudadana informada.</p>
-                
                 <h3>Relación con la NOM-001-SEDATU-2021</h3>
                 <p>El Geovisualizador está alineado con la NOM-001-SEDATU-2021 en los siguientes aspectos:</p>
                 <ul>
@@ -152,7 +154,6 @@
                 </div>
                 <div class="contact-affiliation">
                     <p>Universidad Nacional Autónoma de México (UNAM)</p>
-                    <p>Licenciatura en Urbanismo</p>
                 </div>
             </div>
         </div>
